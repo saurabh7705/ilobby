@@ -1,0 +1,15 @@
+.DS_Store
+*/.DS_Store
+**/***/.DS_Store
+*/**/**/.DS_Store
+*/**/**/*/.DS_Store
+*.*~
+*.log
+/assets
+protected/runtime/application.log
+protected/runtime/application.log.*
+protected/runtime/cache
+protected/runtime/cache/*
+protected/runtime/state.bin
+protected/runtime/gii-1.1.15
+protected/runtime/gii-1.1.15/

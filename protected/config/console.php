@@ -4,26 +4,36 @@
 // Any writable CConsoleApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Console Application',
+	'name'=>'iLobby',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
 
+	'import'=>array(
+		'application.models.*',
+		'application.components.*',
+	),
+
 	// application components
 	'components'=>array(
 		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
-		// uncomment the following to use a MySQL database
-		/*
-		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
-			'emulatePrepare' => true,
+			'connectionString' => 'mysql:host=127.0.0.1;dbname=ilobby;',
+			'emulatePrepare' => true,  	
 			'username' => 'root',
-			'password' => '',
-			'charset' => 'utf8',
+			'password' => 'ilobby',
+			'charset' => 'utf8',  	
+			'tablePrefix' => '',
 		),
-		*/
+
+		'urlManager'=>array(
+			'urlFormat'=>'path',
+			'showScriptName'=>false,
+			'rules'=>array(
+				"<controller:\w+>/<id:\d+>"=>'<controller>/view',
+				"<controller:\w+>/<action:\w+>/<id:\d+>"=>'<controller>/<action>',
+				"<controller:\w+>/<action:\w+>"=>'<controller>/<action>',
+			)
+		),
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
