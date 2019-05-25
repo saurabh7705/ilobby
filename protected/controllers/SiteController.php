@@ -127,7 +127,7 @@ class SiteController extends Controller
 			}
 		}
 		else {
-			$this->renderJSON((array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
 		}
 	}
 
