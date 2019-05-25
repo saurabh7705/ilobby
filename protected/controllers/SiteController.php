@@ -119,7 +119,7 @@ class SiteController extends Controller
 					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$user->name, 'user_id'=>(int)$user->id);
 					$this->renderJSON($response);
 				} else {
-					$this->renderJSON((array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($user)));
+					$this->renderJSON(array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($user)));
 				}
 			}
 			catch(Exception $e) {
