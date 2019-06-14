@@ -201,19 +201,19 @@ class SiteController extends Controller
 			$conditions = array();
 			$params = array();
 			if(array_key_exists('type', $_GET)) {
-				$conditions[] = "type = :type"
+				$conditions[] = "type = :type";
 				$params['type'] = $_GET['type'];
 			}
 			if(array_key_exists('location', $_GET)) {
-				$conditions[] = "user.location = :location"
+				$conditions[] = "user.location = :location";
 				$params['location'] = $_GET['location'];
 			}
 			if(array_key_exists('zipcode', $_GET)) {
-				$conditions[] = "user.zipcode = :zipcode"
+				$conditions[] = "user.zipcode = :zipcode";
 				$params['zipcode'] = $_GET['zipcode'];
 			}
 			if(array_key_exists('gender', $_GET)) {
-				$conditions[] = "user.gender = :gender"
+				$conditions[] = "user.gender = :gender";
 				$params['zipcode'] = $_GET['zipcode'];
 			}
 			$issues = Issue::model()->with("user")->findAll(array(
