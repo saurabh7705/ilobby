@@ -29,7 +29,8 @@ class UserIdentity extends CUserIdentity
 		$user = User::model()->find(array('condition'=>"email=:email OR phone=:email", 'params'=>array('email'=>$this->username)));
 		if($user) {
 			if(md5($this->password) == $user->password) {
-				if(!$user->is_verified) {
+				if(false) {
+				//if(!$user->is_verified) {
 					$this->errorCode = self::ERROR_ACCOUNT_NOT_CONFIRMED;
 				}
 				else {

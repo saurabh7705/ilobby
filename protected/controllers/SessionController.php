@@ -3,6 +3,8 @@
 class SessionController extends Controller
 {
 
+	public $_identity;
+
 	/**
 	 * Logs out the current user and redirect to homepage.
 	 */
@@ -12,10 +14,12 @@ class SessionController extends Controller
 	}
 
 	public function actionCreate() {
-		if(isset($_POST['User'])) {
+		$json = file_get_contents('php://input');
+		$data = json_decode($json, true);
+		if($data != NULL && isset($data['User'])) {
 			try {
 				$user = new User;
-				$user->attributes = $_POST['User'];
+				$user->attributes = $data['User'];
 				$user->password = md5($user->password);
 				
 				if($user->validate()) {
@@ -28,7 +32,7 @@ class SessionController extends Controller
 				}
 			}
 			catch(Exception $e) {
-				
+				var_dump($e->getMessage());
 			}
 		}
 		else {
@@ -37,9 +41,11 @@ class SessionController extends Controller
 	}
 
 	public function actionLogin() {
-		if(isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
-			$email = $_REQUEST['email'];
-			$password = $_REQUEST['password'];
+		$json = file_get_contents('php://input');
+		$data = json_decode($json, true);
+		if($data != NULL && isset($data['email']) && isset($data['password'])) {
+			$email = $data['email'];
+			$password = $data['password'];
 			$this->_identity = new UserIdentity($email,$password);
 			if(!$this->_identity->authenticate()) {
 				if($this->_identity->errorCode === UserIdentity::ERROR_ACCOUNT_NOT_CONFIRMED)

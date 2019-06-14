@@ -44,8 +44,9 @@ class User extends CActiveRecord
 		return array(
 			array('name', 'filter', 'filter'=>array($this, 'removeInvalidChars')),
 			array('email','email'),
+			array('email', 'unique'),
 			array('email', 'required'),
-			array('created_at, updated_at, is_guest', 'numerical', 'integerOnly'=>true),
+			array('created_at, updated_at', 'numerical', 'integerOnly'=>true),
 			array('email, password, name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

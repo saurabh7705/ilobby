@@ -50,15 +50,12 @@ class ApiToken extends CActiveRecord
     }
 	
 	public static function createTokenForUser($user) {
-            $token = sha1($user->email.time());
-        else
-            $token = sha1(time());
+        $token = sha1($user->email.time());
 
 		ApiToken::expireTokensForUserId($user->id);
 
 		$api_token = new ApiToken;
 		$api_token->user_id = $user->id;
-		$api_token->device_id = $device_id;
 		$api_token->status=self::STATUS_ACTIVE;
 		$api_token->token = $token;
 		$api_token->save();

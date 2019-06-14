@@ -122,60 +122,13 @@ class SiteController extends Controller
 		}
 	}
 
-	public function actionCreate() {
-		if(isset($_POST['User'])) {
-			try {
-				$user = new User;
-				$user->attributes = $_POST['User'];
-				$user->password = md5($user->password);
-				
-				if($user->validate()) {
-					$user->save();
-					$token = ApiToken::createTokenForUser($user);
-					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$user->name, 'user_id'=>(int)$user->id);
-					$this->renderJSON($response);
-				} else {
-					$this->renderJSON(array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($user)));
-				}
-			}
-			catch(Exception $e) {
-				
-			}
-		}
-		else {
-			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
-		}
-	}
-
-	public function actionLogin() {
-		if(isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
-			$email = $_REQUEST['email'];
-			$password = $_REQUEST['password'];
-			$this->_identity = new UserIdentity($email,$password);
-			if(!$this->_identity->authenticate()) {
-				if($this->_identity->errorCode === UserIdentity::ERROR_ACCOUNT_NOT_CONFIRMED)
-					$this->renderJSON(array('status'=>'ERROR', 'message'=>"Please verify your account to continue using the services"));
-				else
-					$this->renderJSON(array('status'=>'ERROR', 'message'=>'Incorrect email or password. Please contact support@ilobby.com in case of any queries.'));
-			}
-			else {
-				$user = $this->_identity->user;
-				$token = ApiToken::createTokenForUser($user);
-				$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$user->name, 'user_id'=>(int)$user->id);
-				$this->renderJSON($response);
-			}
-		}
-		else {
-			$this->renderJSON(array('status'=>'ERROR', 'message'=>'Incomplete data, please provide email and password.'));
-		}
-	}
-
 	
 	public function actionCreateIssue() {	
-		$model=new Issue;
-		if(isset($_POST['Issue']) && $this->_user)
+		$json = file_get_contents('php://input');
+		$data = json_decode($json, true);
+		if($data != NULL && isset($data['Issue']) && $this->_user)
 		{
-			$model->attributes=$_POST['Issue'];
+			$model->attributes=$data['Issue'];
 			$model->file_name = CUploadedFile::getInstance($model, 'file_name');
 			$model->user_id = $this->_user->id;
 			if($model->save()) {
@@ -208,13 +161,15 @@ class SiteController extends Controller
 				'image_url' => $issue->getFileUrl(),
 			);
 		}
+
+		return $data;
 	}
 
 	public function actionList() {
 		if($this->_user) {
 			$issues = Issue::model()->findAll(array(
 				"condition"=>"user_id = :user_id",
-				"params"=>array('user_id'=>$this->_user)
+				"params"=>array('user_id'=>$this->_user->id)
 			));
 			$this->renderJSON(array('status'=>'SUCCESS', 'issues'=> $this->getIssuesData($issues)));
 		}
@@ -244,7 +199,7 @@ class SiteController extends Controller
 				$params['zipcode'] = $_GET['zipcode'];
 			}
 			$issues = Issue::model()->with("user")->findAll(array(
-				"condition"=>implode(" and ", $condition),
+				"condition"=>implode(" and ", $conditions),
 				"params"=>$params
 			));
 
