@@ -80,6 +80,21 @@ class SiteController extends Controller
 		
 	}
 
+	public function actionMe() {
+		if($this->_user) {
+			$user = $this->_user;
+			$response = array(
+				'status'=>'SUCCESS', 
+				'name'=>$user->name, 
+				'id'=>(int)$user->id
+			);
+			$this->renderJSON($response);
+		}
+		else {
+			$this->renderJSON(array('status'=>'AUTH_ERROR'));
+		}
+	}
+
 	public function actionCreate() {
 		if(isset($_POST['User'])) {
 			try {
@@ -125,6 +140,91 @@ class SiteController extends Controller
 		}
 		else {
 			$this->renderJSON(array('status'=>'ERROR', 'message'=>'Incomplete data, please provide email and password.'));
+		}
+	}
+
+	
+	public function actionCreateIssue() {	
+		$model=new Issue;
+		if(isset($_POST['Issue']) && $this->_user)
+		{
+			$model->attributes=$_POST['Issue'];
+			$model->file_name = CUploadedFile::getInstance($model, 'file_name');
+			$model->user_id = $this->_user->id;
+			if($model->save()) {
+				if($model->file_name) {
+					$extension = $model->file_name->getExtensionName();            
+					$model->extension = $extension;
+					$path = Yii::app()->basePath."/../issue/$model->id.$extension";
+					$model->file_name->saveAs($path);
+					$model->save();
+					$response = array('status'=>'SUCCESS');
+					$this->renderJSON($response);
+				}
+			} else {
+				$this->renderJSON(array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($model)));
+			}
+		}
+		else {
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
+		}
+	}
+
+	public function getIssuesData($issues) {
+		$data = array();
+		foreach ($issues as $issue) {
+			$data[] = {
+				'id' => $issue->id,
+				'notes' => $issue->notes,
+				'created_at' => $issue->created_at,
+				'location' => $issue->location,
+				'image_url' => $issue->getFileUrl(),
+			}
+		}
+	}
+
+	public function actionList() {
+		if($this->_user) {
+			$issues = Issue::model()->findAll(array(
+				"condition"=>"user_id = :user_id",
+				"params"=>array('user_id'=>$this->_user)
+			));
+			$this->renderJSON(array('status'=>'SUCCESS', 'issues'=> $this->getIssuesData($issues)));
+		}
+		else {
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
+		}
+	}
+
+	public function actionListFilter() {
+		if($this->_user) {
+			$conditions = array();
+			$params = array();
+			if(array_key_exists('type', $_GET)) {
+				$conditions[] = "type = :type"
+				$params['type'] = $_GET['type'];
+			}
+			if(array_key_exists('location', $_GET)) {
+				$conditions[] = "user.location = :location"
+				$params['location'] = $_GET['location'];
+			}
+			if(array_key_exists('zipcode', $_GET)) {
+				$conditions[] = "user.zipcode = :zipcode"
+				$params['zipcode'] = $_GET['zipcode'];
+			}
+			if(array_key_exists('gender', $_GET)) {
+				$conditions[] = "user.gender = :gender"
+				$params['zipcode'] = $_GET['zipcode'];
+			}
+			$issues = Issue::model()->with("user")->findAll(array(
+				"condition"=>implode(" and ", $condition),
+				"params"=>$params
+			));
+
+			$this->renderJSON(array('status'=>'SUCCESS', 'issues'=> $this->getIssuesData($issues)));
+		}
+		else {
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
 		}
 	}
 }

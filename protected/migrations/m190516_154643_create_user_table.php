@@ -38,10 +38,28 @@ class m190516_154643_create_user_table extends CDbMigration
 			),
 			'ENGINE=InnoDB'
 		);
+
+		$this->createTable(
+			'issue',
+			array(
+				'id'=>'int(11) UNSIGNED NOT NULL AUTO_INCREMENT',
+				'type' => 'int(11) NOT NULL',
+				'user_id' => 'int(11) NOT NULL',
+				'notes' => 'text',
+				'location' => 'text',
+				'file_name' => 'varchar(255)',
+				'extension' => 'varchar(255)',
+				'created_at' => 'int(11)',
+				'updated_at' => 'int(11)',
+				'PRIMARY KEY (id)',
+			),
+			'ENGINE=InnoDB'
+		);
 	}
 
 	public function safeDown() {
 		$this->dropTable('user');
 		$this->dropTable('api_token');
+		//$this->dropTable('issue');
 	}
 }
