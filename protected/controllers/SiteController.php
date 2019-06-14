@@ -173,13 +173,13 @@ class SiteController extends Controller
 	public function getIssuesData($issues) {
 		$data = array();
 		foreach ($issues as $issue) {
-			$data[] = {
+			$data[] = array(
 				'id' => $issue->id,
 				'notes' => $issue->notes,
 				'created_at' => $issue->created_at,
 				'location' => $issue->location,
 				'image_url' => $issue->getFileUrl(),
-			}
+			);
 		}
 	}
 
