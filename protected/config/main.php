@@ -47,6 +47,7 @@ return array(
 		),
 		*/
 		'db'=>array(
+			//http://34.222.32.136/ilobby/
 			'connectionString' => 'mysql:host=127.0.0.1;dbname=ilobby;',
 			'emulatePrepare' => true,  	
 			'username' => 'root',
