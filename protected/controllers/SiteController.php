@@ -2,7 +2,7 @@
 
 class SiteController extends Controller
 {
-	/*public $_user;
+	public $_user;
 
 	public function filters() {
 		return array(
@@ -27,7 +27,7 @@ class SiteController extends Controller
 
 	public function setUser($user_id) {
 		$this->_user = User::model()->findByPk($user_id);
-	}*/
+	}
 
 	/**
 	 * Declares class-based actions.
