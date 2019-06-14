@@ -1,6 +1,6 @@
 <?php
 
-class SessionController extends CController
+class SessionController extends Controller
 {
 
 	/**
