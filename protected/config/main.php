@@ -49,7 +49,7 @@ return array(
 			'connectionString' => 'mysql:host=127.0.0.1;dbname=ilobby;',
 			'emulatePrepare' => true,  	
 			'username' => 'root',
-			'password' => '',	  	
+			'password' => 'ilobby',	  	
 			'charset' => 'utf8',  	
 			'tablePrefix' => ''
 		),

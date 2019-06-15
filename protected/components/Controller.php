@@ -22,7 +22,7 @@ class Controller extends CController
 	public $breadcrumbs=array();
 
 	protected function renderJSON($data) {
-	    //header('Content-type: application/json');
+	    header('Content-type: application/json');
 	    echo CJSON::encode($data);
 
 	    foreach (Yii::app()->log->routes as $route) {
