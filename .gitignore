@@ -6,6 +6,7 @@
 *.*~
 *.log
 /assets
+issue
 protected/runtime/application.log
 protected/runtime/application.log.*
 protected/runtime/cache

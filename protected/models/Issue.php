@@ -44,7 +44,7 @@ class Issue extends CActiveRecord
             array('user_id, type', 'required'),
             array('user_id, type, created_at, updated_at', 'numerical', 'integerOnly'=>true),
             array('file_name, extension', 'length', 'max'=>255),
-            array('file_name', 'file', 'types'=>'jpg, jpeg, png', 'maxSize'=>1024*1024*10, 'tooLarge'=>'File size cannot exceed 10 MB.'),
+            //array('file_name', 'file', 'types'=>'jpg, jpeg, png', 'maxSize'=>1024*1024*10, 'tooLarge'=>'File size cannot exceed 10 MB.'),
             array('extension, file_name', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
@@ -61,7 +61,7 @@ class Issue extends CActiveRecord
     }
 
     public function getFileUrl() {
-        return "http://52.221.250.196/".Yii::app()->baseUrl."/issue/".$this->getFileName();
+        return "http://34.222.32.136/ilobby/issue/".$this->getFileName();
     }
 	
 	public function beforeSave() {

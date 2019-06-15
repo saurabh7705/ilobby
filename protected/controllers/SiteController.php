@@ -123,20 +123,21 @@ class SiteController extends Controller
 	}
 
 	
-	public function actionCreateIssue() {	
-		$json = file_get_contents('php://input');
-		$data = json_decode($json, true);
-		if($data != NULL && isset($data['Issue']) && $this->_user)
+	public function actionCreateIssue() {
+		if($_POST != NULL && isset($_POST['Issue']) && $this->_user)
 		{
-			$model->attributes=$data['Issue'];
-			$model->file_name = CUploadedFile::getInstance($model, 'file_name');
+			$model = new Issue;
+			$model->attributes=json_decode($_POST['Issue'], true);
 			$model->user_id = $this->_user->id;
 			if($model->save()) {
-				if($model->file_name) {
-					$extension = $model->file_name->getExtensionName();            
-					$model->extension = $extension;
+				if(array_key_exists('image', $_FILES)) {
+					$path_parts = pathinfo($_FILES["image"]["name"]);
+					$extension = $path_parts['extension'];
 					$path = Yii::app()->basePath."/../issue/$model->id.$extension";
-					$model->file_name->saveAs($path);
+					move_uploaded_file($_FILES['image']['tmp_name'], $path);
+
+					$model->extension = $extension;
+					$model->file_name = $model->getFileName();
 					$model->save();
 					$response = array('status'=>'SUCCESS');
 					$this->renderJSON($response);
@@ -192,11 +193,11 @@ class SiteController extends Controller
 			}
 			if(array_key_exists('zipcode', $_GET)) {
 				$conditions[] = "user.zipcode = :zipcode";
-				$params['zipcode'] = $_GET['zipcode'];
+				$params['zipcode'] = $this->_user->zipcode;
 			}
 			if(array_key_exists('gender', $_GET)) {
 				$conditions[] = "user.gender = :gender";
-				$params['zipcode'] = $_GET['zipcode'];
+				$params['gender'] = $_GET['gender'];
 			}
 			$issues = Issue::model()->with("user")->findAll(array(
 				"condition"=>implode(" and ", $conditions),
