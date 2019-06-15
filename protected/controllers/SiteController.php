@@ -156,6 +156,7 @@ class SiteController extends Controller
 		foreach ($issues as $issue) {
 			$data[] = array(
 				'id' => $issue->id,
+				'type' => $issue->type,
 				'notes' => $issue->notes,
 				'created_at' => $issue->created_at,
 				'location' => $issue->location,
@@ -196,7 +197,7 @@ class SiteController extends Controller
 				$params['zipcode'] = $this->_user->zipcode;
 			}
 			if(array_key_exists('gender', $_GET)) {
-				$conditions[] = "user.gender = :gender";
+				$conditions[] = "user.sex = :gender";
 				$params['gender'] = $_GET['gender'];
 			}
 			$issues = Issue::model()->with("user")->findAll(array(

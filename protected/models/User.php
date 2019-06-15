@@ -48,6 +48,7 @@ class User extends CActiveRecord
 			array('email', 'required'),
 			array('created_at, updated_at', 'numerical', 'integerOnly'=>true),
 			array('email, password, name', 'length', 'max'=>255),
+			array('name, age, address, zipcode, sex, phone, education_level, ethnicity', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, email, password, name, created_at, updated_at', 'safe', 'on'=>'search'),

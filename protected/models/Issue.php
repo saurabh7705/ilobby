@@ -45,7 +45,7 @@ class Issue extends CActiveRecord
             array('user_id, type, created_at, updated_at', 'numerical', 'integerOnly'=>true),
             array('file_name, extension', 'length', 'max'=>255),
             //array('file_name', 'file', 'types'=>'jpg, jpeg, png', 'maxSize'=>1024*1024*10, 'tooLarge'=>'File size cannot exceed 10 MB.'),
-            array('extension, file_name', 'safe'),
+            array('extension, file_name, notes, type, location', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, user_id, created_at, updated_at', 'safe', 'on'=>'search'),
