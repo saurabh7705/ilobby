@@ -173,7 +173,27 @@ class SiteController extends Controller
 				"condition"=>"user_id = :user_id",
 				"params"=>array('user_id'=>$this->_user->id)
 			));
-			$this->renderJSON(array('status'=>'SUCCESS', 'issues'=> $this->getIssuesData($issues)));
+
+			$zipcode_issues = Issue::model()->with("user")->findAll(array(
+				"condition"=>"zipcode = :zipcode",
+				"params"=>array('zipcode'=>$this->_user->zipcode)
+			));
+
+			$male_issues = Issue::model()->with("user")->findAll(array(
+				"condition"=>"sex = 0"
+			));
+
+			$female_issues = Issue::model()->with("user")->findAll(array(
+				"condition"=>"sex = 1"
+			));
+
+			$location_issues = Issue::model()->with("user")->findAll(array(
+				"condition"=>"location = :location",
+				"params"=>array('location'=>$this->_user->location)
+			));
+
+
+			$this->renderJSON(array('status'=>'SUCCESS', 'issues'=> $this->getIssuesData($issues), 'zipcode_issues'=> $this->getIssuesData($zipcode_issues), 'male_issues'=> $this->getIssuesData($male_issues), 'female_issues'=> $this->getIssuesData($female_issues), 'location_issues'=> $this->getIssuesData($location_issues)));
 		}
 		else {
 			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
