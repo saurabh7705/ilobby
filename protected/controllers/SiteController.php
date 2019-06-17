@@ -104,7 +104,16 @@ class SiteController extends Controller
 	 */
 	public function actionLogout()
 	{
-		
+		if($this->_user) {
+			ApiToken::expireTokensForUserId($this->_user->id);
+			$response = array(
+				'status'=>'SUCCESS'
+			);
+			$this->renderJSON($response);
+		}
+		else {
+			$this->renderJSON(array('status'=>'AUTH_ERROR'));
+		}
 	}
 
 	public function actionMe() {
@@ -113,12 +122,42 @@ class SiteController extends Controller
 			$response = array(
 				'status'=>'SUCCESS', 
 				'name'=>$user->name, 
-				'id'=>(int)$user->id
+				'id'=>(int)$user->id,
+				'age'=>$user->age,
+				'address'=>$user->address,
+				'zipcode'=>$user->zipcode,
+				'gender'=>$user->sex,
+				'education_level'=>$user->education_level,
+				'ethnicity'=>$user->ethnicity
 			);
 			$this->renderJSON($response);
 		}
 		else {
 			$this->renderJSON(array('status'=>'AUTH_ERROR'));
+		}
+	}
+
+	public function actionUpdate() {
+		$json = file_get_contents('php://input');
+		$data = json_decode($json, true);
+		if($this->_user && $data != NULL && isset($data['User'])) {
+			try {
+				$this->_user->attributes = $data['User'];
+				
+				if($this->_user->validate()) {
+					$this->_user->save();
+					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$this->_user->name, 'user_id'=>(int)$this->_user->id);
+					$this->renderJSON($response);
+				} else {
+					$this->renderJSON(array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($this->_user)));
+				}
+			}
+			catch(Exception $e) {
+
+			}
+		}
+		else {
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
 		}
 	}
 
