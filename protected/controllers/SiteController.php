@@ -146,7 +146,7 @@ class SiteController extends Controller
 				
 				if($this->_user->validate()) {
 					$this->_user->save();
-					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$this->_user->name, 'user_id'=>(int)$this->_user->id);
+					$response = array('status'=>'SUCCESS', 'name'=>$this->_user->name, 'user_id'=>(int)$this->_user->id);
 					$this->renderJSON($response);
 				} else {
 					$this->renderJSON(array('status'=>'ERROR', 'message'=>LoadDataHelper::lib()->getModelErrorsArray($this->_user)));
