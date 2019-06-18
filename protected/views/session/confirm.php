@@ -1,0 +1,1 @@
+<h1>Your account has been verified successfully.</h1>

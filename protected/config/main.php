@@ -17,6 +17,8 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'application.helpers.*',
+		'application.lib.*',            
+		'application.lib.mailer.*'
 	),
 
 	'modules'=>array(

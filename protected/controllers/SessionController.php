@@ -8,9 +8,22 @@ class SessionController extends Controller
 	/**
 	 * Logs out the current user and redirect to homepage.
 	 */
-	public function actionLogout()
+	public function actionConfirm()
 	{
-		
+		if(isset($_GET['token'])) {
+			$user = User::model()->findByPk($_GET['token']);
+			$user->is_verified = 1;
+			$user->save();
+			$this->render('confirm');
+		} else {
+			$this->renderJSON(array('status'=>'ERROR', 'message'=>"Insufficient Data!"));
+		}
+	}
+
+	public function actionSendMail() {
+		$user = User::model()->findByPk($_GET['token']);
+		KommunityMailer::mailer()->confirmationEmail($user)->deliver();
+		$this->renderJSON(array('status'=>'SUCCESS'));
 	}
 
 	public function actionCreate() {
@@ -25,6 +38,7 @@ class SessionController extends Controller
 				if($user->validate()) {
 					$user->save();
 					$token = ApiToken::createTokenForUser($user);
+					KommunityMailer::mailer()->confirmationEmail($user)->deliver();
 					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$user->name, 'user_id'=>(int)$user->id);
 					$this->renderJSON($response);
 				} else {
