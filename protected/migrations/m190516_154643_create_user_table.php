@@ -47,6 +47,7 @@ class m190516_154643_create_user_table extends CDbMigration
 				'user_id' => 'int(11) NOT NULL',
 				'notes' => 'text',
 				'location' => 'text',
+				'place_id' => 'text',
 				'file_name' => 'varchar(255)',
 				'extension' => 'varchar(255)',
 				'created_at' => 'int(11)',
@@ -60,6 +61,6 @@ class m190516_154643_create_user_table extends CDbMigration
 	public function safeDown() {
 		$this->dropTable('user');
 		$this->dropTable('api_token');
-		//$this->dropTable('issue');
+		$this->dropTable('issue');
 	}
 }
