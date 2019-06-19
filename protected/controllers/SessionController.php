@@ -22,7 +22,7 @@ class SessionController extends Controller
 
 	public function actionSendMail() {
 		$user = User::model()->findByPk($_GET['token']);
-		KommunityMailer::mailer()->confirmationEmail($user)->deliver();
+		//KommunityMailer::mailer()->confirmationEmail($user)->deliver();
 		$this->renderJSON(array('status'=>'SUCCESS'));
 	}
 
@@ -38,7 +38,7 @@ class SessionController extends Controller
 				if($user->validate()) {
 					$user->save();
 					$token = ApiToken::createTokenForUser($user);
-					KommunityMailer::mailer()->confirmationEmail($user)->deliver();
+					//KommunityMailer::mailer()->confirmationEmail($user)->deliver();
 					$response = array('status'=>'SUCCESS', "auth_token"=>$token, 'name'=>$user->name, 'user_id'=>(int)$user->id);
 					$this->renderJSON($response);
 				} else {

@@ -89,7 +89,7 @@ class User extends CActiveRecord
 
 	public function beforeSave(){
         if($this->isNewRecord){
-            $this->is_verified = 0;
+            $this->is_verified = 1;
             $this->name = trim($this->name);
             $this->created_at = time();
         }
